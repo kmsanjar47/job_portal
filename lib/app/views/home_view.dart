@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:job_portal/app/views/chat_view.dart';
 import 'package:job_portal/app/widgets/category_item.dart';
 import 'package:job_portal/app/widgets/featured_job.dart';
 import 'package:job_portal/app/widgets/recent_job.dart';
 
 import '../controllers/home_controller.dart';
+import 'notification_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -19,8 +21,13 @@ class HomeView extends GetView<HomeController> {
           title: const Text('Job Portal'),
           centerTitle: false,
           actions: [
+            IconButton(onPressed: (){
+              Get.to(() => NotificationView());
+            }, icon: Icon(Icons.notifications_none)),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(()=>ChatView());
+              },
               icon: Icon(Icons.chat_bubble_outline),
             ),
           ],

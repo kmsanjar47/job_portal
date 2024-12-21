@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:job_portal/app/routes/app_pages.dart';
+import 'package:job_portal/app/views/auth_view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -35,20 +38,58 @@ class ProfileView extends StatelessWidget {
                 infoKey: "Email Address",
                 info: "demo@mail.com",
               ),
+              const Info(
+                infoKey: "Resume Uploaded",
+                info: "Yes",
+              ),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 48),
+                        shape: const StadiumBorder(),
+                      ),
+                      onPressed: () {},
+                      child: const Text("Application History"),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 160,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 48),
+                        shape: const StadiumBorder(),
+                      ),
+                      onPressed: () {},
+                      child: const Text("Edit profile"),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 16.0),
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.center,
                 child: SizedBox(
                   width: 160,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 48),
                       shape: const StadiumBorder(),
                     ),
-                    onPressed: () {},
-                    child: const Text("Edit profile"),
+                    onPressed: () {
+                      Get.offAllNamed(Routes.AUTH);
+                    },
+                    child: const Text("Logout"),
                   ),
                 ),
               ),

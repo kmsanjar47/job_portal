@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_portal/app/views/profile_view.dart';
+import 'package:job_portal/app/views/saved_view.dart';
 import 'package:job_portal/app/views/search_view.dart';
 import 'home_view.dart';
 import 'notification_view.dart';
@@ -17,7 +18,7 @@ class _NavigationViewState extends State<NavigationView> {
   List pages = [
     const HomeView(),
     const SearchView(),
-    const NotificationView(),
+    const SavedView(),
     const ProfileView()
   ];
 
@@ -54,12 +55,12 @@ class _NavigationViewState extends State<NavigationView> {
               label: "Search"),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.notifications_active_outlined,
+                Icons.bookmark,
                 color: currentNavbarIdx == 2
                     ? const Color(0xFF43D3FF)
                     : const Color(0xFF494949),
               ),
-              label: "Notification"),
+              label: "Saved Jobs"),
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.profile_circled,
                   color: currentNavbarIdx == 3
