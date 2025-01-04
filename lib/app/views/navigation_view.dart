@@ -4,7 +4,6 @@ import 'package:job_portal/app/views/profile_view.dart';
 import 'package:job_portal/app/views/saved_view.dart';
 import 'package:job_portal/app/views/search_view.dart';
 import 'home_view.dart';
-import 'notification_view.dart';
 
 class NavigationView extends StatefulWidget {
   const NavigationView({super.key});

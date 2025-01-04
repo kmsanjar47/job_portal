@@ -3,25 +3,17 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:job_portal/app/services/auth_service.dart';
 import 'package:job_portal/app/views/navigation_view.dart';
-import 'package:job_portal/app/views/register_view.dart';
 
 import '../widgets/custom_submit_button.dart';
 import '../widgets/custom_text_field.dart';
 
-class AuthView extends GetView {
-  const AuthView({super.key});
+class RegisterView extends GetView {
+  const RegisterView({super.key});
 
-  initServices() async {
-    await Get.putAsync(() => GetStorage.init());
-    GetStorage box = GetStorage();
-    if (box.read('token') != null) {
-      Get.offAll(() => NavigationView());
-    }
-  }
 
-  Future login(String username, String password) async {
+  Future register(String username,String email, String password) async {
     try {
-      var responseCode = await AuthService().login(username, password);
+      var responseCode = await AuthService().register(username,email, password);
     } catch (e) {
       print(e);
       return e;
@@ -32,6 +24,7 @@ class AuthView extends GetView {
   Widget build(BuildContext context) {
     TextEditingController idTextCtl = TextEditingController();
     TextEditingController passwordTextCtl = TextEditingController();
+    TextEditingController emailTextCtl = TextEditingController();
 
 
     return Scaffold(
@@ -58,7 +51,7 @@ class AuthView extends GetView {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Login/Register",
+                  "Register",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 Text(
@@ -69,8 +62,11 @@ class AuthView extends GetView {
             ),
 
             Column(
-              children: [
-                CustomTextField(idTextCtl, prefixText: "Enter Username:"),
+              children: [CustomTextField(idTextCtl, prefixText: "Username:"),
+              SizedBox(
+                height: 20,
+              ),
+                CustomTextField(emailTextCtl, prefixText: "Enter Email:"),
                 SizedBox(
                   height: 50,
                 ),
@@ -82,20 +78,10 @@ class AuthView extends GetView {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomSubmitButton(
-                      text: "Login",
-                      color: Colors.blue,
-                      onTap: () {
-                        login(idTextCtl.text, passwordTextCtl.text);
-                      },
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    CustomSubmitButton(
                       text: "Register",
                       color: Colors.blue,
                       onTap: () {
-                        Get.to(() => RegisterView());
+                        register(idTextCtl.text,emailTextCtl.text, passwordTextCtl.text);
                       },
                     ),
                   ],

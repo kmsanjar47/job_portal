@@ -18,10 +18,7 @@ class FeaturedJob extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)
           ),
           clipBehavior: Clip.hardEdge,
-          child: Image.asset(
-            assetPath,
-            fit: BoxFit.cover,
-          ),
+          child: Image.network(assetPath,fit: BoxFit.cover,),
         ),
         SizedBox(height: 10),
         Text(

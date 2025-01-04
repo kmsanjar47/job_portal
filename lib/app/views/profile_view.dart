@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:job_portal/app/routes/app_pages.dart';
 import 'package:job_portal/app/views/auth_view.dart';
 
@@ -87,6 +88,7 @@ class ProfileView extends StatelessWidget {
                       shape: const StadiumBorder(),
                     ),
                     onPressed: () {
+                      GetStorage().remove('token');
                       Get.offAllNamed(Routes.AUTH);
                     },
                     child: const Text("Logout"),
