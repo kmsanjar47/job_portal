@@ -48,12 +48,10 @@ class ProfileView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: 200,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 48),
                         shape: const StadiumBorder(),
                       ),
                       onPressed: () {},
@@ -61,12 +59,10 @@ class ProfileView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 160,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 48),
                         shape: const StadiumBorder(),
                       ),
                       onPressed: () {},
@@ -79,12 +75,10 @@ class ProfileView extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: SizedBox(
-                  width: 160,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 48),
                       shape: const StadiumBorder(),
                     ),
                     onPressed: () {

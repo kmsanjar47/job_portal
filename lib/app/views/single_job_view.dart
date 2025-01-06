@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:job_portal/app/utils/helpers.dart';
 
+import '../services/job_service.dart';
 import '../utils/config.dart';
 
 class SingleJobView extends GetView {
   final Map job;
   const SingleJobView({super.key,required this.job});
 
-  init() {
-
+  Future addToSavedJob() async {
+    String token = Utils().getOpenIDToken();
+    try {
+      var response = await JobService().addToSavedJob(token, job['id']);
+      print(response);
+      return response;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Utils().saveJobToLocal(job);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Job Details'),
@@ -55,7 +66,9 @@ class SingleJobView extends GetView {
                   onPressed: () {},
                   child: const Text('Apply Now'),
                 ),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_border)),
+                IconButton(onPressed: ()async{
+                  await addToSavedJob();
+                }, icon: const Icon(Icons.favorite_border)),
               ],
             ),
           ],

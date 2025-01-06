@@ -18,7 +18,7 @@ class RecentJob extends StatelessWidget {
             borderRadius: BorderRadius.circular(10)
         ),
         clipBehavior: Clip.hardEdge,
-        child: Image.asset(
+        child: Image.network(
           assetPath,
           fit: BoxFit.cover,
         ),

@@ -15,7 +15,7 @@ class NavigationView extends StatefulWidget {
 class _NavigationViewState extends State<NavigationView> {
   int currentNavbarIdx = 0;
   List pages = [
-    const HomeView(),
+    HomeView(),
     const SearchView(),
     const SavedView(),
     const ProfileView()

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:job_portal/app/services/job_service.dart';
 import 'package:job_portal/app/utils/config.dart';
 import 'package:job_portal/app/views/chat_view.dart';
@@ -27,6 +28,12 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    GetStorage box = GetStorage();
+    box.writeIfNull('RecentJobs', []);
+    Rx<List> recentJobs = Rx<List>([]);
+    recentJobs.value = box.read('RecentJobs');
+    print("Token: ${box.read('token')}");
+    print("Recent Jobs: $recentJobs");
     Rx<List> jobs = Rx<List>([]);
     getAllJobs().then((data) {
       jobs.value = data;
@@ -108,29 +115,31 @@ class HomeView extends GetView<HomeController> {
 
                   children: [
                     Text(
-                      'Recent Jobs',
+                      'Recently Viewed',
                       style: TextStyle(fontSize: 24,),
                     ),
                     SizedBox(height: 20),
                     SizedBox(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: (){
-                                Get.to(()=>SingleJobView(job: jobs.value[index],));
-                              },
-                              child: RecentJob(
-                                  assetPath: 'assets/images/group-young-business-people-working-office.jpg',
-                                  companyName: 'Company $index',
-                                  postTitle: 'Software Engineer'),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(height: 20);
-                          },
-                          itemCount: 10
+                      child: Obx(
+                          ()=> ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: (){
+                                  Get.to(()=>SingleJobView(job: recentJobs.value[index],));
+                                },
+                                child: RecentJob(
+                                    assetPath: '${Config.BASE_URL}/${recentJobs.value[index]['documents']}',
+                                    companyName: recentJobs.value[index]['company_name'],
+                                    postTitle: recentJobs.value[index]['title'],),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return SizedBox(height: 20);
+                            },
+                            itemCount: recentJobs.value.length
+                        ),
                       ),
                     ),
                   ],

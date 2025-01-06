@@ -9,6 +9,9 @@ import 'app/views/navigation_view.dart';
 initServices() async {
   await Get.putAsync(() => GetStorage.init());
   GetStorage box = GetStorage();
+  box.writeIfNull('recentJobs', []);
+  box.writeIfNull('token', null);
+  print(box.read('token'));
   if (box.read('token') != null) {
     Get.offAll(() => NavigationView());
   }
