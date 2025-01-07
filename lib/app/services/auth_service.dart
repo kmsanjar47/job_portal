@@ -12,7 +12,7 @@ class AuthService{
   final box = GetStorage();
 
   Future login(String username, String password) async {
-    String url = 'http://192.168.0.223:8000/token'; // Replace with actual backend URL
+    String url = '${Config.BASE_URL}/token'; // Replace with actual backend URL
     try {
       // Set headers for form data
       var options = Options(
@@ -50,7 +50,7 @@ class AuthService{
   }
 
   Future register(String email, String username, String password) async {
-    String url = 'http://192.168.0.223:8000/register'; // Replace with actual backend URL
+    String url = '${Config.BASE_URL}/register'; // Replace with actual backend URL
     try {
       // Set headers for form data
       var options = Options(

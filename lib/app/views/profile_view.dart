@@ -7,6 +7,7 @@ import 'package:job_portal/app/views/profile_edit_view.dart';
 
 import '../services/profile_service.dart';
 import '../utils/config.dart';
+import 'application_history_view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -132,7 +133,9 @@ class ProfileView extends StatelessWidget {
                         foregroundColor: Colors.white,
                         shape: const StadiumBorder(),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(() => ApplicationHistoryView());
+                      },
                       child: const Text("Application History"),
                     ),
                   ),

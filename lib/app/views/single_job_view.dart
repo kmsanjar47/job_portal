@@ -9,6 +9,18 @@ class SingleJobView extends GetView {
   final Map job;
   const SingleJobView({super.key,required this.job});
 
+  Future applyToJob() async {
+    String token = Utils().getOpenIDToken();
+    try {
+      var response = JobService().applyToJob(token, job['id']);
+      print(response);
+      return response;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
+
   Future addToSavedJob() async {
     String token = Utils().getOpenIDToken();
     try {
@@ -63,12 +75,18 @@ class SingleJobView extends GetView {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Apply Now'),
+                  onPressed: () async {
+                    if(job['applied'] == false){
+                      await applyToJob();
+                    }
+                    else{
+                    }
+                  },
+                  child: job['applied'] == false?Text('Apply Now'):Text('Applied'),
                 ),
                 IconButton(onPressed: ()async{
                   await addToSavedJob();
-                }, icon: const Icon(Icons.favorite_border)),
+                }, icon: job['saved'] == false?Icon(Icons.favorite_border):Icon(Icons.favorite,color: Colors.red,)),
               ],
             ),
           ],

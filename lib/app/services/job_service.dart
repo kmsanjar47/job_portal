@@ -1,15 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../utils/config.dart';
 
 class JobService {
   Dio dio = new Dio();
   final String baseUrl = Config.BASE_URL;
+  GetStorage box = GetStorage();
 
   Future getAllJobs() async {
-    String url = '$baseUrl/jobs/jobs';
+    String token = box.read('token');
+    String url = '$baseUrl/jobs/jobs/$token';
     try {
       var response = await dio.get(url);
       print(response.data);
@@ -61,6 +64,28 @@ class JobService {
         return response.data;
       }else{
         Get.snackbar("Error", "An error occurred while saving job");
+        return response.data;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
+
+  Future applyToJob(String token, int jobId) async {
+    String url = '$baseUrl/jobs/jobs/apply/$token/$jobId';
+    try {
+      // var options = Options(
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      // );
+      var response = await dio.post(url);
+      if(response.statusCode == 200){
+        Get.snackbar("Success", "Job applied successfully");
+        return response.data;
+      }else{
+        Get.snackbar("Error", "An error occurred while applying job");
         return response.data;
       }
     } catch (e) {
