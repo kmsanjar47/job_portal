@@ -1,39 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:job_portal/app/services/auth_service.dart';
-import 'package:job_portal/app/views/navigation_view.dart';
+import 'package:job_portal/app/controllers/auth_controller.dart';
+import 'package:job_portal/app/models/auth_model.dart';
 import 'package:job_portal/app/views/register_view.dart';
-
 import '../widgets/custom_submit_button.dart';
 import '../widgets/custom_text_field.dart';
 
-class AuthView extends GetView {
+class AuthView extends GetView<AuthController> {
   const AuthView({super.key});
-
-  initServices() async {
-    await Get.putAsync(() => GetStorage.init());
-    GetStorage box = GetStorage();
-    if (box.read('token') != null) {
-      Get.offAll(() => NavigationView());
-    }
-  }
-
-  Future login(String username, String password) async {
-    try {
-      var responseCode = await AuthService().login(username, password);
-    } catch (e) {
-      print(e);
-      return e;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController idTextCtl = TextEditingController();
-    TextEditingController passwordTextCtl = TextEditingController();
-
-
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Padding(
@@ -42,11 +19,6 @@ class AuthView extends GetView {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Icon(
-            //   Icons.gif_box_sharp,
-            //   color: Colors.green,
-            //   size: 70,
-            // ),
             Text(
               "BracU Job Portal",
               style: TextStyle(
@@ -70,35 +42,40 @@ class AuthView extends GetView {
 
             Column(
               children: [
-                CustomTextField(idTextCtl, prefixText: "Enter Username:"),
+                CustomTextField(controller.idTextCtl,false, prefixText: "Enter Username:"),
                 SizedBox(
                   height: 50,
                 ),
-                CustomTextField(passwordTextCtl, prefixText: "Password:"),
+                CustomTextField(controller.passwordTextCtl,true, prefixText: "Password:"),
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomSubmitButton(
-                      text: "Login",
-                      color: Colors.blue,
-                      onTap: () {
-                        login(idTextCtl.text, passwordTextCtl.text);
-                      },
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    CustomSubmitButton(
-                      text: "Register",
-                      color: Colors.blue,
-                      onTap: () {
-                        Get.to(() => RegisterView());
-                      },
-                    ),
-                  ],
+                Obx(
+                  ()=> controller.loading.value == false? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomSubmitButton(
+                        text: "Login",
+                        color: Colors.blue,
+                        onTap: () {
+                          controller.login(LoginParamsModel(
+                              username: controller.idTextCtl.text,
+                              password: controller.passwordTextCtl.text
+                          ));
+                        },
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      CustomSubmitButton(
+                        text: "Register",
+                        color: Colors.blue,
+                        onTap: () {
+                          Get.to(() => RegisterView());
+                        },
+                      ),
+                    ],
+                  ): Center(child: CircularProgressIndicator(),),
                 ),
               ],
             ),

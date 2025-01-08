@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:job_portal/app/services/job_service.dart';
 import 'package:job_portal/app/utils/config.dart';
 import 'package:job_portal/app/views/chat_view.dart';
+import 'package:job_portal/app/views/job_create_view.dart';
 import 'package:job_portal/app/views/single_job_view.dart';
 import 'package:job_portal/app/widgets/category_item.dart';
 import 'package:job_portal/app/widgets/featured_job.dart';
@@ -39,6 +40,12 @@ class HomeView extends GetView<HomeController> {
       jobs.value = data;
     });
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Get.to(() => JobCreateView());
+          },
+          child: Icon(Icons.add),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

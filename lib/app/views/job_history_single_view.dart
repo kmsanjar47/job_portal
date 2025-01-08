@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:job_portal/app/utils/config.dart';
 import 'package:job_portal/app/utils/helpers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../services/job_service.dart';
 
@@ -9,7 +14,7 @@ class JobHistorySingleView extends StatelessWidget {
 
   const JobHistorySingleView({super.key, required this.jobHistory});
 
-  Future chaangeJobApplicationStatus(
+  Future changeJobApplicationStatus(
       String status, String userId, int jobId) async {
     try {
       String token = Utils().getOpenIDToken();
@@ -21,6 +26,49 @@ class JobHistorySingleView extends StatelessWidget {
       return e;
     }
   }
+
+  Future<void> downloadPDF(String url, String fileName) async {
+    try {
+      // Check and request permission
+      if (await Permission.storage.request().isGranted) {
+        final dio = Dio();
+
+        // Target the Downloads directory
+        Directory? downloadsDirectory;
+        if (Platform.isAndroid) {
+          downloadsDirectory = Directory('/storage/emulated/0/Download');
+        } else if (Platform.isIOS) {
+          downloadsDirectory = await getApplicationDocumentsDirectory();
+        }
+
+        if (downloadsDirectory != null) {
+          String savePath = "${downloadsDirectory.path}/$fileName";
+
+          // Download the file
+          Response response = await dio.download(url, savePath,
+              onReceiveProgress: (received, total) {
+                if (total != -1) {
+                  print("Downloading: ${(received / total * 100).toStringAsFixed(0)}%");
+                }
+              });
+
+          if (response.statusCode == 200) {
+            print("Download complete: $savePath");
+          } else {
+            print("Download failed: ${response.statusCode}");
+          }
+        } else {
+          print("Downloads directory not found.");
+        }
+      } else {
+        print("Permission denied.");
+      }
+    } catch (e) {
+      print("Error downloading file: $e");
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,24 +117,32 @@ class JobHistorySingleView extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(Icons.download),
-                        onPressed: () {
-                          // download resume
-                          String resume_link =
-                              jobHistory['user_info'][index]['resume'];
-                          // download pdf from link
+                        onPressed: () async {
+                          String resumeLink = '${Config.BASE_URL}/${jobHistory['user_info'][index]['resume']}';
+                          String fileName = "resume_${jobHistory['user_info'][index]['id']}.pdf";
 
-                          // change job status
-                          chaangeJobApplicationStatus(
-                              'Resume Downloaded',
-                              jobHistory['user_info'][index]['id'],
-                              jobHistory['job_data']['id']);
+                          // Call the download function
+                          await downloadPDF(resumeLink, fileName);
+
+                          // Update job status
+                          await changeJobApplicationStatus(
+                            'Resume Downloaded',
+                            jobHistory['user_info'][index]['id'],
+                            jobHistory['job_data']['id'],
+                          );
+
+                          // Show a snackbar to notify the user
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Resume downloaded: $fileName")),
+                          );
                         },
                       ),
+
                       IconButton(
                         icon: Icon(Icons.check),
                         onPressed: () {
                           // accept application
-                          chaangeJobApplicationStatus(
+                          changeJobApplicationStatus(
                               'Accepted',
                               jobHistory['user_info'][index]['id'],
                               jobHistory['job_data']['id']);
@@ -96,7 +152,7 @@ class JobHistorySingleView extends StatelessWidget {
                         icon: Icon(Icons.close),
                         onPressed: () {
                           // reject application
-                          chaangeJobApplicationStatus(
+                          changeJobApplicationStatus(
                               'Rejected',
                               jobHistory['user_info'][index]['id'],
                               jobHistory['job_data']['id']);

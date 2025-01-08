@@ -3,8 +3,10 @@ import "package:flutter/material.dart";
 class CustomTextField extends StatelessWidget {
   final TextEditingController textFieldController;
   final String prefixText;
+  final obscureText;
 
   const CustomTextField(this.textFieldController,
+      this.obscureText,
       {required this.prefixText, Key? key})
       : super(key: key);
 
@@ -39,6 +41,7 @@ class CustomTextField extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              obscureText: obscureText,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               cursorColor: Colors.green,
               cursorHeight: 22,

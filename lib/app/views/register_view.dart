@@ -10,10 +10,13 @@ import '../widgets/custom_text_field.dart';
 class RegisterView extends GetView {
   const RegisterView({super.key});
 
-
-  Future register(String username,String email, String password) async {
+  Future register(String username, String email, String password) async {
     try {
-      var responseCode = await AuthService().register(username,email, password);
+      var responseCode =
+          await AuthService().register(username, email, password);
+      if (responseCode == 200) {
+        Get.back();
+      }
     } catch (e) {
       print(e);
       return e;
@@ -22,10 +25,9 @@ class RegisterView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController idTextCtl = TextEditingController();
+    TextEditingController usernameTextCtl = TextEditingController();
     TextEditingController passwordTextCtl = TextEditingController();
     TextEditingController emailTextCtl = TextEditingController();
-
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -62,15 +64,16 @@ class RegisterView extends GetView {
             ),
 
             Column(
-              children: [CustomTextField(idTextCtl, prefixText: "Username:"),
-              SizedBox(
-                height: 20,
-              ),
-                CustomTextField(emailTextCtl, prefixText: "Enter Email:"),
+              children: [
+                CustomTextField(usernameTextCtl,false, prefixText: "Username:"),
+                SizedBox(
+                  height: 20,
+                ),
+                CustomTextField(emailTextCtl,false, prefixText: "Enter Email:"),
                 SizedBox(
                   height: 50,
                 ),
-                CustomTextField(passwordTextCtl, prefixText: "Password:"),
+                CustomTextField(passwordTextCtl,true, prefixText: "Password:"),
                 SizedBox(
                   height: 20,
                 ),
@@ -81,7 +84,8 @@ class RegisterView extends GetView {
                       text: "Register",
                       color: Colors.blue,
                       onTap: () {
-                        register(idTextCtl.text,emailTextCtl.text, passwordTextCtl.text);
+                        register(usernameTextCtl.text, emailTextCtl.text,
+                            passwordTextCtl.text);
                       },
                     ),
                   ],

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as getx;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -17,6 +17,29 @@ class JobService {
       var response = await dio.get(url);
       print(response.data);
       return response.data;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
+
+  Future createJob(FormData data) async {
+    String url = '$baseUrl/jobs/jobs/';
+    try {
+      var options = Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      );
+      var response = await dio.post(url, data: data, options: options);
+      if(response.statusCode == 201){
+        Get.snackbar("Success", "Job created successfully");
+        Get.back();
+        return response.data;
+      }else{
+        Get.snackbar("Error", "An error occurred while creating job");
+        return response.data;
+      }
     } catch (e) {
       print("Error: $e");
       return e;

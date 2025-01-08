@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:job_portal/app/models/auth_model.dart';
 import 'package:job_portal/app/utils/config.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,7 +13,7 @@ class AuthService {
   // new get box
   final box = GetStorage();
 
-  Future login(String username, String password) async {
+  Future login(LoginParamsModel data) async {
     String url = '${Config.BASE_URL}/login'; // Replace with actual backend URL
     try {
       // Set headers for form data
@@ -24,8 +25,8 @@ class AuthService {
 
       // Format the data as form data
       var formData = {
-        'username': username,
-        'password': password,
+        'username': data.username,
+        'password': data.password,
       };
 
       var response = await dio.post(
@@ -55,7 +56,7 @@ class AuthService {
     }
   }
 
-  Future register(String email, String username, String password) async {
+  Future register(String username,String email, String password) async {
     String url =
         '${Config.BASE_URL}/register'; // Replace with actual backend URL
     try {
@@ -82,7 +83,6 @@ class AuthService {
       if (response.statusCode == 200) {
         Get.snackbar(
             "Registration Successful", "You have successfully registered");
-        Get.back();
         return response.statusCode;
       } else {
         Get.snackbar("Registration Failed", response.data['message']);

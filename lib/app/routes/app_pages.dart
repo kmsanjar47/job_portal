@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:job_portal/app/views/navigation_view.dart';
 
+import '../bindings/auth_binding.dart';
 import '../bindings/home_binding.dart';
 import '../views/auth_view.dart';
 import '../views/home_view.dart';
@@ -27,7 +28,7 @@ class AppPages {
     GetPage(
       name: _Paths.AUTH,
       page: () => const AuthView(),
-      binding: HomeBinding(),
+      binding: AuthBinding(),
     ),
   ];
 }
