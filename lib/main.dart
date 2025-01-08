@@ -11,6 +11,9 @@ initServices() async {
   GetStorage box = GetStorage();
   box.writeIfNull('recentJobs', []);
   box.writeIfNull('token', null);
+  box.writeIfNull('is_general_user', null);
+  box.writeIfNull('username', null);
+  box.writeIfNull('email', null);
   print(box.read('token'));
   if (box.read('token') != null) {
     Get.offAll(() => NavigationView());

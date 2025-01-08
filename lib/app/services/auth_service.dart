@@ -3,16 +3,17 @@ import 'package:job_portal/app/utils/config.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:job_portal/app/views/navigation_view.dart';
+import 'package:job_portal/app/views/navigation_view_publisher.dart';
 
-
-class AuthService{
+class AuthService {
   Dio dio = new Dio();
   final String baseUrl = Config.BASE_URL;
+
   // new get box
   final box = GetStorage();
 
   Future login(String username, String password) async {
-    String url = '${Config.BASE_URL}/token'; // Replace with actual backend URL
+    String url = '${Config.BASE_URL}/login'; // Replace with actual backend URL
     try {
       // Set headers for form data
       var options = Options(
@@ -36,7 +37,12 @@ class AuthService{
       if (response.statusCode == 200) {
         Get.snackbar("Login Successful", "You have successfully logged in");
         box.write('token', response.data['access_token']);
-        Get.offAll(() => NavigationView());
+        box.write('is_general_user', response.data['is_general_user']);
+        box.write('username', response.data['username']);
+        box.write('email', response.data['email']);
+        response.data['is_general_user'] == true
+            ? Get.offAll(() => NavigationView())
+            : Get.offAll(() => NavigationViewPublisher());
         return response.statusCode;
       } else {
         Get.snackbar("Login Failed", "Invalid credentials");
@@ -50,7 +56,8 @@ class AuthService{
   }
 
   Future register(String email, String username, String password) async {
-    String url = '${Config.BASE_URL}/register'; // Replace with actual backend URL
+    String url =
+        '${Config.BASE_URL}/register'; // Replace with actual backend URL
     try {
       // Set headers for form data
       var options = Options(
@@ -73,7 +80,8 @@ class AuthService{
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Registration Successful", "You have successfully registered");
+        Get.snackbar(
+            "Registration Successful", "You have successfully registered");
         Get.back();
         return response.statusCode;
       } else {
@@ -82,8 +90,9 @@ class AuthService{
       }
     } catch (e) {
       print("Error: $e");
-      Get.snackbar("Registration Failed", "An error occurred while registering");
+      Get.snackbar(
+          "Registration Failed", "An error occurred while registering");
       return e;
-    }}
-
+    }
+  }
 }

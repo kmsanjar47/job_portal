@@ -93,4 +93,28 @@ class JobService {
       return e;
     }
   }
+
+  Future getAllCreatedJobStatus(String token) async {
+    String url = '$baseUrl/application-history/get-all-created-job-application-history/$token';
+    try {
+      var response = await dio.get(url);
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
+
+  Future changeJobApplicaitonStatus(String token, int jobId, String status, String userId) async {
+    String url = '$baseUrl/application-history/update-application-history/$token/$jobId/$userId/$status';
+    try {
+      var response = await dio.patch(url);
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
 }
