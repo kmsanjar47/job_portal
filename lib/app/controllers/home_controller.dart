@@ -1,23 +1,65 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../services/job_service.dart';
+import '../utils/helpers.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  GetStorage box = GetStorage();
+  Rx<List> recentJobs = Rx<List>([]);
+  Rx<List> jobs = Rx<List>([]);
+  Rx<bool> isFeaturedJobLoading = false.obs;
 
-  final count = 0.obs;
+
   @override
-  void onInit() {
+  onInit() async{
     super.onInit();
+    await getAllJobs();
+   box.writeIfNull('RecentJobs', []);
+   recentJobs.value = box.read('RecentJobs');
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  updateRecentJobs(){
+    recentJobs.value = box.read('RecentJobs');
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  Future getAllJobs() async {
+    isFeaturedJobLoading.value = true;
+    try {
+      var data = await JobService().getAllJobs();
+      jobs.value = data;
+    } catch (e) {
+      print(e);
+      return e;
+    }finally {
+      isFeaturedJobLoading.value = false;
+    }
   }
 
-  void increment() => count.value++;
+
+
+  Future applyToJob(job) async {
+    String token = Utils().getOpenIDToken();
+    try {
+      var response = JobService().applyToJob(token, job['id']);
+      print(response);
+      return response;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
+
+  Future addToSavedJob(job) async {
+    String token = Utils().getOpenIDToken();
+    try {
+      var response = await JobService().addToSavedJob(token, job['id']);
+      print(response);
+      return response;
+    } catch (e) {
+      print("Error: $e");
+      return e;
+    }
+  }
 }
+

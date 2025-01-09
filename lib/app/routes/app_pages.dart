@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:job_portal/app/bindings/navigation_binding.dart';
 import 'package:job_portal/app/views/navigation_view.dart';
+import 'package:job_portal/app/views/navigation_view_publisher.dart';
 
 import '../bindings/auth_binding.dart';
 import '../bindings/home_binding.dart';
@@ -23,7 +25,12 @@ class AppPages {
     GetPage(
       name: _Paths.NAVIGATION,
       page: () => const NavigationView(),
-      binding: HomeBinding(),
+      binding: NavigationBinding(),
+    ),
+    GetPage(
+      name: _Paths.NAVIGATION_PUBLISHER,
+      page: () => const NavigationViewPublisher(),
+      binding: NavigationBinding(),
     ),
     GetPage(
       name: _Paths.AUTH,

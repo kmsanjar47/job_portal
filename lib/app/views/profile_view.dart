@@ -5,85 +5,72 @@ import 'package:job_portal/app/routes/app_pages.dart';
 import 'package:job_portal/app/views/auth_view.dart';
 import 'package:job_portal/app/views/profile_edit_view.dart';
 
+import '../controllers/profile_controller.dart';
 import '../services/profile_service.dart';
 import '../utils/config.dart';
 import 'application_history_view.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
-  Future getProfileInformation() async {
-    try {
-      var response = ProfileService().getProfileInformation();
-      print(response);
-      return response;
-    } catch (e) {
-      print("Error: $e");
-      return e;
-    }
-  }
+  // Future getProfileInformation() async {
+  //   try {
+  //     var response = ProfileService().getProfileInformation();
+  //     print(response);
+  //     return response;
+  //   } catch (e) {
+  //     print("Error: $e");
+  //     return e;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    Rx<Map> profile = Rx({});
-    RxBool isProfileInfoGiven = RxBool(false);
-    getProfileInformation().then((value) {
-      if(value== null){
-        isProfileInfoGiven.value = false;
-      }
-      else{
-        isProfileInfoGiven.value = true;
-      }
-      profile.value = value;
-    });
+    // Rx<Map> profile = Rx({});
+    // RxBool isProfileInfoGiven = RxBool(false);
+    // getProfileInformation().then((value) {
+    //   if(value== null){
+    //     isProfileInfoGiven.value = false;
+    //   }
+    //   else{
+    //     isProfileInfoGiven.value = true;
+    //   }
+    //   profile.value = value;
+    // });
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-          //
-          // {
-          //   "id": "85ddc180-3623-460b-aba9-0574b741cb8f",
-          //   "name": "Khan MD Saifullah Anjar",
-          //   "phone_number": "01768976882",
-          //   "profile_photo": "uploads/20250106215950_Screenshot 2024-11-01 182953.png",
-          //   "department": "CSE",
-          //   "user_id": "76fc0e04-557b-4ce3-adfb-3e71047a9192",
-          //   "email": "khan.md.saifullah@g.bracu.ac.bd",
-          //   "graduation_date": "2025-01-06T15:51:20.501000",
-          //   "resume": "uploads/20250106215950_Khan-MD-Saifullah-Anjar-Resume-FullStack.pdf",
-          //   "saved_jobs": 2
-          // }
-
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
               Obx(
-                  ()=> isProfileInfoGiven.value == true?Column(
+                  ()=> controller.isProfileInfoGiven.value == true?Column(
                   children: [
-                    ProfilePic(image: '${Config.BASE_URL}/${profile.value['profile_photo']}'),
+                    ProfilePic(image: '${Config.BASE_URL}/${controller.profile.value['profile_photo']}'),
                     Text(
-                      '${profile.value['name']}',
+                      '${controller.profile.value['name']}',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Divider(height: 16.0 * 2),
                     Info(
                       infoKey: "Phone no",
-                      info: "${profile.value['phone_number']}",
+                      info: "${controller.profile.value['phone_number']}",
                     ),
                     Info(
                       infoKey: "Department",
-                      info: "${profile.value['department']}",
+                      info: "${controller.profile.value['department']}",
                     ),
                     Info(
                       infoKey: "Email Address",
-                      info: "${profile.value['email']}",
+                      info: "${controller.profile.value['email']}",
                     ),
                     Info(
                       infoKey: "Graduation Date",
-                      info: profile.value['graduation_date'].toString().split('T')[0],
+                      info: controller.profile.value['graduation_date'].toString().split('T')[0],
                     ),
                     Info(
                       infoKey: "Resume Uploaded",
-                      info: profile.value['resume']==null?'No':'Yes',
+                      info: controller.profile.value['resume']==null?'No':'Yes',
                     ),
                     const SizedBox(height: 16.0),
                   ],

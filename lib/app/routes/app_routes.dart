@@ -6,6 +6,7 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const NAVIGATION = _Paths.NAVIGATION;
   static const AUTH = _Paths.AUTH;
+  static const NAVIGATION_PUBLISHER = _Paths.NAVIGATION_PUBLISHER;
 }
 
 abstract class _Paths {
@@ -13,6 +14,7 @@ abstract class _Paths {
   static const HOME = '/home';
   static const NAVIGATION = '/navigation';
   static const AUTH = '/auth';
+  static const NAVIGATION_PUBLISHER = '/navigation-publisher';
 }
 
 

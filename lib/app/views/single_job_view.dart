@@ -1,41 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:job_portal/app/controllers/home_controller.dart';
 import 'package:job_portal/app/utils/helpers.dart';
 
 import '../services/job_service.dart';
 import '../utils/config.dart';
 
-class SingleJobView extends GetView {
+class SingleJobView extends GetView<HomeController> {
   final Map job;
   const SingleJobView({super.key,required this.job});
-
-  Future applyToJob() async {
-    String token = Utils().getOpenIDToken();
-    try {
-      var response = JobService().applyToJob(token, job['id']);
-      print(response);
-      return response;
-    } catch (e) {
-      print("Error: $e");
-      return e;
-    }
-  }
-
-  Future addToSavedJob() async {
-    String token = Utils().getOpenIDToken();
-    try {
-      var response = await JobService().addToSavedJob(token, job['id']);
-      print(response);
-      return response;
-    } catch (e) {
-      print("Error: $e");
-      return e;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     Utils().saveJobToLocal(job);
+    controller.updateRecentJobs();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Job Details'),
@@ -77,7 +55,7 @@ class SingleJobView extends GetView {
                 ElevatedButton(
                   onPressed: () async {
                     if(job['applied'] == false){
-                      await applyToJob();
+                      await controller.applyToJob(job);
                     }
                     else{
                     }
@@ -85,7 +63,7 @@ class SingleJobView extends GetView {
                   child: job['applied'] == false?Text('Apply Now'):Text('Applied'),
                 ),
                 IconButton(onPressed: ()async{
-                  await addToSavedJob();
+                  await controller.addToSavedJob(job);
                 }, icon: job['saved'] == false?Icon(Icons.favorite_border):Icon(Icons.favorite,color: Colors.red,)),
               ],
             ),
